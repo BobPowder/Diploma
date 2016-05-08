@@ -104,14 +104,50 @@ function ForwardButton_Callback(hObject, eventdata, handles)
 % hObject    handle to ForwardButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+%Получение набора из трех двумерных массивов, взятых из jpg-файла. Каждый массив отвечает за
+%интенсивность красного, зеленого и синего цвета каждого пикселя соответственно
+%После идет перевод изображения N*N к размеру 100*100 по методу ближайшего соседа
+global palitra;
+global images;
+global notpreparedimages;
+V = zeros(1, 10000, 3);
+BufBinary = zeros(1, 10000*palitra*3);
+MToDisplay=imresize(imread(get(handles.PathEdit, 'String')), [100 100]);
 
+%Перевод массива в вектор-строку
+for x = 1 : 3
+	V(:,:,x)=reshape(MToDisplay(:, :, x), 1, 10000);
+end
+
+%Перевод вектора-строки в бинарную вектор-строку
+for j = 1:3
+	for k=1:10000
+		BufBinary(1, palitra*3*(k-1) + fix(V(1, k, j)/(256/palitra)) + palitra*(j-1) + 1) = true;
+	end
+end
+
+images(size(images, 1)+1, :)=BufBinary(1, :);
+
+BufRawImage=zeros(100, 100, 3);
+%Сохранение изображения массива для вывода (если тестовое изображение будет распознано) 
+for j = 1:3
+	for k=1:100
+		for l=1:100
+			BufRawImage(k,l,j)=fix(MToDisplay(k, l, j)/(256/palitra))*fix(256/palitra);
+		end
+	end
+end
+notpreparedimages(size(notpreparedimages, 1)+1, :, :, :)=BufRawImage;
+TrainingEnd;
+hf=findobj('Name','Training');
+close(hf);
 
 % --- Executes on button press in BackButton.
 function BackButton_Callback(hObject, eventdata, handles)
 % hObject    handle to BackButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-open('MainMenu.fig');
+MainMenu;
 hf=findobj('Name','Training');
 close(hf);
 
@@ -144,6 +180,12 @@ function BrowseButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 [FileName,PathName] = uigetfile('*.jpg','Select jpg-image');
-guidata(handles.PathEdit,  PathName);
+Path=get(handles.PathEdit, 'String');
+Path = [PathName, FileName];
+set(handles.PathEdit, 'String', Path);
+
+
+
+
 
 
