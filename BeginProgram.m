@@ -79,6 +79,8 @@ end
 % Перевод images к типу double
 images=double(images);
 
+global answers;
+answers=[];
 % Описание эталонных портретов писателей 
 answers{1}  = '1.  Барто';
 answers{2}  = '2.  Блок';

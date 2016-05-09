@@ -1,19 +1,19 @@
-function varargout = MainMenu(varargin)
-% MAINMENU M-file for MainMenu.fig
-%      MAINMENU, by itself, creates a new MAINMENU or raises the existing
+function varargout = FindingEnd(varargin)
+% FINDINGEND M-file for FindingEnd.fig
+%      FINDINGEND, by itself, creates a new FINDINGEND or raises the existing
 %      singleton*.
 %
-%      H = MAINMENU returns the handle to a new MAINMENU or the handle to
+%      H = FINDINGEND returns the handle to a new FINDINGEND or the handle to
 %      the existing singleton*.
 %
-%      MAINMENU('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in MAINMENU.M with the given input arguments.
+%      FINDINGEND('CALLBACK',hObject,eventData,handles,...) calls the local
+%      function named CALLBACK in FINDINGEND.M with the given input arguments.
 %
-%      MAINMENU('Property','Value',...) creates a new MAINMENU or raises the
+%      FINDINGEND('Property','Value',...) creates a new FINDINGEND or raises the
 %      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before MainMenu_OpeningFunction gets called.  An
+%      applied to the GUI before FindingEnd_OpeningFunction gets called.  An
 %      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to MainMenu_OpeningFcn via varargin.
+%      stop.  All inputs are passed to FindingEnd_OpeningFcn via varargin.
 %
 %      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
 %      instance to run (singleton)".
@@ -22,17 +22,16 @@ function varargout = MainMenu(varargin)
 
 % Copyright 2002-2003 The MathWorks, Inc.
 
-% Edit the above text to modify the response to help MainMenu
+% Edit the above text to modify the response to help FindingEnd
 
-% Last Modified by GUIDE v2.5 04-May-2016 23:00:22
+% Last Modified by GUIDE v2.5 10-May-2016 00:01:03
 
 % Begin initialization code - DO NOT EDIT
-
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @MainMenu_OpeningFcn, ...
-                   'gui_OutputFcn',  @MainMenu_OutputFcn, ...
+                   'gui_OpeningFcn', @FindingEnd_OpeningFcn, ...
+                   'gui_OutputFcn',  @FindingEnd_OutputFcn, ...
                    'gui_LayoutFcn',  [] , ...
                    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
@@ -47,26 +46,39 @@ end
 % End initialization code - DO NOT EDIT
 
 
-% --- Executes just before MainMenu is made visible.
-function MainMenu_OpeningFcn(hObject, eventdata, handles, varargin)
+% --- Executes just before FindingEnd is made visible.
+function FindingEnd_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to MainMenu (see VARARGIN)
+% varargin   command line arguments to FindingEnd (see VARARGIN)
 
-% Choose default command line output for MainMenu
+% Choose default command line output for FindingEnd
 handles.output = hObject;
-
+global ImageToShow;
+global notpreparedimages;
+global answers;
+if ImageToShow > 0
+ ImageToShow
+ I = zeros(100, 100, 3); 
+ I(:, :, :) = notpreparedimages(ImageToShow, :, :, :);
+ I=uint8(I);
+ axes(handles.ResultImage);
+ imshow(I);
+ Path = get(handles.Descrption, 'String');
+ Path = answers(ImageToShow);
+ set(handles.Descrption, 'String', Path);
+end
 % Update handles structure
 guidata(hObject, handles);
 
-% UIWAIT makes MainMenu wait for user response (see UIRESUME)
+% UIWAIT makes FindingEnd wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = MainMenu_OutputFcn(hObject, eventdata, handles) 
+function varargout = FindingEnd_OutputFcn(hObject, eventdata, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -76,24 +88,12 @@ function varargout = MainMenu_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.output;
 
 
-% --- Executes on button press in trainmethod.
-function trainmethod_Callback(hObject, eventdata, handles)
-% hObject    handle to trainmethod (see GCBO)
+% --- Executes on button press in OKButton.
+function OKButton_Callback(hObject, eventdata, handles)
+% hObject    handle to OKButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-Training;
-hf=findobj('Name','MainMenu');
+MainMenu;
+hf=findobj('Name','FindingEnd');
 close(hf);
-
-
-
-% --- Executes on button press in findmethod.
-function findmethod_Callback(hObject, eventdata, handles)
-% hObject    handle to findmethod (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-Finding;
-hf=findobj('Name','MainMenu');
-close(hf);
-
 

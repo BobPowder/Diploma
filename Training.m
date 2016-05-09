@@ -127,7 +127,6 @@ for j = 1:3
 end
 
 images(size(images, 1)+1, :)=BufBinary(1, :);
-
 BufRawImage=zeros(100, 100, 3);
 %Сохранение изображения массива для вывода (если тестовое изображение будет распознано) 
 for j = 1:3
@@ -138,6 +137,10 @@ for j = 1:3
 	end
 end
 notpreparedimages(size(notpreparedimages, 1)+1, :, :, :)=BufRawImage;
+
+global answers;
+answers(length(answers)+1)=get(handles.DescriptionEdit, 'String');
+
 TrainingEnd;
 hf=findobj('Name','Training');
 close(hf);
@@ -180,7 +183,7 @@ function BrowseButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 [FileName,PathName] = uigetfile('*.jpg','Select jpg-image');
-Path=get(handles.PathEdit, 'String');
+Path = get(handles.PathEdit, 'String');
 Path = [PathName, FileName];
 set(handles.PathEdit, 'String', Path);
 
