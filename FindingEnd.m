@@ -59,6 +59,8 @@ handles.output = hObject;
 global ImageToShow;
 global notpreparedimages;
 global answers;
+%handles
+set(handles.ResultImage, 'visible', 'on');
 if ImageToShow > 0
  ImageToShow
  I = zeros(100, 100, 3); 
@@ -66,9 +68,12 @@ if ImageToShow > 0
  I=uint8(I);
  axes(handles.ResultImage);
  imshow(I);
- Path = get(handles.Descrption, 'String');
- Path = answers(ImageToShow);
- set(handles.Descrption, 'String', Path);
+ %Path = get(handles.Description, 'String');
+ Path = answers{ImageToShow};
+ set(handles.Description, 'String', Path);
+else
+ set(handles.ResultImage, 'visible', 'off');
+ set(handles.Description, 'String', 'Image not found');
 end
 % Update handles structure
 guidata(hObject, handles);

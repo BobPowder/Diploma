@@ -177,6 +177,7 @@ threshold=20000;
 global ImageToShow;
 
 if max > threshold
+	imax
 	ImageToShow=imax;
     %Выводим изображение на экран, если порог превышен
     % result = zeros(100, 100, 3);
