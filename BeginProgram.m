@@ -1,10 +1,15 @@
 %Очистка памяти перед выполнением программы
 clear;
 
+%Стратегия - полноцветные
+global strategy;
+strategy=1; 
+
 %Ввод пользователем количеств оттенков красного, зеленого и синего цвета,
 %которые будут участвовать в палитре
 %palitra=input('Введите количество оттенков красного, зеленого и синего цвета, участвующие в палитре: ');
 
+global palitra;
 palitra=16;
 MyJpgFiles=dir('Разные/*.jpg');
 MyJpgFilesQuantity=length(MyJpgFiles);
@@ -15,12 +20,14 @@ MyJpgFilesQuantity=length(MyJpgFiles);
 %Первый индекс - номер изображения.
 %Второй индекс - индекс бинарной комбинации, характеризующей данное изображение
 %Значение массива - значение элемента данной бинарной комбинации, характеризующей данное изображение
+global images;
 images = zeros(MyJpgFilesQuantity, 10000*palitra*3);
 
 %notpreparedimages - массив палитровых изображений, готовых к отображению на экране в качестве ответа
 %Первая координата - номер изображения
 %Вторая и третья координаты - координаты пикселя данного изображения
 %Значение массива - цвет данного пикселя данного изображения
+global notpreparedimages;
 notpreparedimages = zeros(MyJpgFilesQuantity, 100, 100, 3);
 
 %V -  массив, хранящий  изображение. Необходим для заполнения
@@ -76,56 +83,17 @@ end
 % Перевод images к типу double
 images=double(images);
 
+global answers;
+answers=[];
+MyTxtFiles=dir('Разные (описание)/*.txt');
+
+MyTxtFilesQuantity=length(MyTxtFiles);
+for i = 1 : MyTxtFilesQuantity
+	fileID = fopen(['Разные (описание)/', MyTxtFiles(i).name]);
+	buf = textscan(fileID, '%s','delimiter','\n');
+	answers{i} = buf{1};
+	fclose(fileID);
+end
 % Описание эталонных портретов писателей 
-answers{1}  = '1.  Барто';
-answers{2}  = '2.  Блок';
-answers{3}  = '3.   Брюсов';
-answers{4}  = '4.   Бунин';
-answers{5}  = '5.   Чехов';
-answers{6}  = '6.   Чернышевский';
-answers{7}  = '7.  Державин';
-answers{8}  = '8.  Гоголь';
-answers{9}  = '9.   Карамзин';
-answers{10}  = '10.  Крылов';
-answers{11}  = '11.  Лермонтов';
-answers{12}  = '12.   Маршак';
-answers{13}  = '13.   Маяковский';
-answers{14}  = '14.   Некрасов';
-answers{15}  = '15.   Пастернак';
-answers{16}  = '16.  Пушкин';
-answers{17}  = '17.  Цветаева';
-answers{18}  = '18.   Тютчев';
-answers{19}  = '19.   Ушинский';
-answers{20}  = '20.   Некрасов';
-answers{21}  = '21.   Пушкин';
-answers{22}  = '22.   Куприн';
-answers{23}  = '23.   Варламов';
-answers{24}  = '24.   Островский';
-answers{25}  = '25.   Ахматова';
-answers{26}  = '26.   Маяковский';
-answers{27}  = '27.   Блок';
-answers{28}  = '28.   Державин';
-answers{29}  = '29.   Лермонтов';
-answers{30}  = '30.   Есенин';
-answers{31}  = '31.   Цветаева';
-answers{32}  = '32.   Суриков';
-answers{33}  = '33.   Лермонтов';
-answers{34}  = '34.   Крылов';
-answers{35}  = '35.   Бунин';
-answers{36}  = '36.   Тютчев';
-answers{37}  = '37.   Ершов';
-answers{38}  = '38.   Толстой';
-answers{39}  = '39.  Маршак';
-answers{40}  = '40.  Жуковский';
-answers{41}  = '41.   Шекспир';
-answers{42}  = '42.   Чуковский';
-answers{43}  = '43.   Андерсен';
-answers{44}  = '44.   Гюго';
-answers{45}  = '45.  Гёте';
-answers{46}  = '46.  Грибоедов';
-answers{47}  = '47.   Дюма';
-answers{48}  = '48.  Михалков';
-answers{49}  = '49.  Чуковский';
-answers{50}  = '50.   Есенин';  
 
 MainMenu;

@@ -104,14 +104,108 @@ function ForwardButton_Callback(hObject, eventdata, handles)
 % hObject    handle to ForwardButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+%Получение набора из трех двумерных массивов, взятых из jpg-файла. Каждый массив отвечает за
+%интенсивность красного, зеленого и синего цвета каждого пикселя соответственно
+%После идет перевод изображения N*N к размеру 100*100 по методу ближайшего соседа
+global palitra;
+global images;
+global notpreparedimages;
+global strategy;
+switch strategy
+	case 1
+		V = zeros(1, 10000, 3);
+		BufBinary = zeros(1, 10000*palitra*3);
+	case 2
+		V = zeros(1, 10000);
+		BufBinary = zeros(1, 10000*palitra);
+	case 3
+		V = zeros(1, 10000);
+		BufBinary = zeros(1, 10000);
+end
 
+
+switch strategy
+	case 1
+		MToDisplay=imresize(imread(get(handles.PathEdit, 'String')), [100 100]);
+	case 2
+		MToDisplay=rgb2gray(imresize(imread(get(handles.PathEdit, 'String')), [100 100]));
+	case 3
+		MToDisplay=im2bw(imresize(imread(get(handles.PathEdit, 'String')), [100 100]), 0.5);
+end
+
+%Перевод массива в вектор-строку
+switch strategy
+	case 1
+		for x = 1 : 3
+			V(:,:,x)=reshape(MToDisplay(:, :, x), 1, 10000);
+		end
+	case 2
+		V(:,:)=reshape(MToDisplay, 1, 10000);
+	case 3
+		V(:,:)=reshape(MToDisplay, 1, 10000);
+		%V = logical(V);
+end
+
+%Перевод вектора-строки в бинарную вектор-строку
+switch strategy
+	case 1
+		for j = 1:3
+			for k=1:10000
+				BufBinary(1, palitra*3*(k-1) + fix(V(1, k, j)/(256/palitra)) + palitra*(j-1) + 1) = true;
+			end
+		end
+	case 2
+		for m=1:1:10000
+			BufBinary(1, (m-1)*palitra + fix(V(1, m)/(256/palitra)) + 1)=true;
+		end
+	case 3
+		%BufBinary=logical(BufBinary);
+		for m=1:1:10000
+			BufBinary(1, m)=~V(1,m);
+			%BufBinary(1, (m-1)*palitra + fix(V(1, m)/(256/palitra)) + 1)=true;
+		end
+end
+
+images(size(images, 1)+1, :) = BufBinary(1, :);
+
+%Сохранение изображения массива для вывода (если тестовое изображение будет распознано) 
+switch strategy
+	case 1
+		BufRawImage=zeros(100, 100, 3);
+		for j = 1:3
+			for k=1:100
+				for l=1:100
+					BufRawImage(k,l,j)=fix(MToDisplay(k, l, j)/(256/palitra))*fix(256/palitra);
+				end
+			end
+		end
+	case 2
+		BufRawImage=zeros(100, 100, 1);
+		for k=1:100
+			for l=1:100
+				BufRawImage(k,l,1)=fix(MToDisplay(k, l)/(256/palitra))*fix(256/palitra);
+			end
+		end
+	case 3
+		BufRawImage=zeros(100, 100, 1);
+		BufRawImage(:, :, 1)=MToDisplay;
+end
+
+notpreparedimages(size(notpreparedimages, 1)+1, :, :, :)=BufRawImage;
+
+global answers;
+answers(length(answers)+1)=get(handles.DescriptionEdit, 'String');
+
+TrainingEnd;
+hf=findobj('Name','Training');
+close(hf);
 
 % --- Executes on button press in BackButton.
 function BackButton_Callback(hObject, eventdata, handles)
 % hObject    handle to BackButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-open('MainMenu.fig');
+MainMenu;
 hf=findobj('Name','Training');
 close(hf);
 
@@ -144,6 +238,12 @@ function BrowseButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 [FileName,PathName] = uigetfile('*.jpg','Select jpg-image');
-guidata(handles.PathEdit,  PathName);
+Path = get(handles.PathEdit, 'String');
+Path = [PathName, FileName];
+set(handles.PathEdit, 'String', Path);
+
+
+
+
 
 
