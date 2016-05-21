@@ -110,6 +110,7 @@ function ForwardButton_Callback(hObject, eventdata, handles)
 global palitra;
 global images;
 global notpreparedimages;
+<<<<<<< HEAD
 global strategy;
 switch strategy
 	case 1
@@ -191,6 +192,34 @@ switch strategy
 		BufRawImage(:, :, 1)=MToDisplay;
 end
 
+=======
+V = zeros(1, 10000, 3);
+BufBinary = zeros(1, 10000*palitra*3);
+MToDisplay=imresize(imread(get(handles.PathEdit, 'String')), [100 100]);
+
+%Перевод массива в вектор-строку
+for x = 1 : 3
+	V(:,:,x)=reshape(MToDisplay(:, :, x), 1, 10000);
+end
+
+%Перевод вектора-строки в бинарную вектор-строку
+for j = 1:3
+	for k=1:10000
+		BufBinary(1, palitra*3*(k-1) + fix(V(1, k, j)/(256/palitra)) + palitra*(j-1) + 1) = true;
+	end
+end
+
+images(size(images, 1)+1, :)=BufBinary(1, :);
+BufRawImage=zeros(100, 100, 3);
+%Сохранение изображения массива для вывода (если тестовое изображение будет распознано) 
+for j = 1:3
+	for k=1:100
+		for l=1:100
+			BufRawImage(k,l,j)=fix(MToDisplay(k, l, j)/(256/palitra))*fix(256/palitra);
+		end
+	end
+end
+>>>>>>> origin/master
 notpreparedimages(size(notpreparedimages, 1)+1, :, :, :)=BufRawImage;
 
 global answers;

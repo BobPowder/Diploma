@@ -86,6 +86,7 @@ images=double(images);
 global answers;
 answers=[];
 MyTxtFiles=dir('Разные (описание)/*.txt');
+<<<<<<< HEAD
 
 MyTxtFilesQuantity=length(MyTxtFiles);
 for i = 1 : MyTxtFilesQuantity
@@ -93,6 +94,12 @@ for i = 1 : MyTxtFilesQuantity
 	buf = textscan(fileID, '%s','delimiter','\n');
 	answers{i} = buf{1};
 	fclose(fileID);
+=======
+MyTxtFiles
+MyTxtFilesQuantity=length(MyTxtFiles);
+for i = 1 : MyTxtFilesQuantity
+	answers{i} = textread(['Разные (описание)/', MyTxtFiles(i).name]', '%s', 1);
+>>>>>>> origin/master
 end
 % Описание эталонных портретов писателей 
 
