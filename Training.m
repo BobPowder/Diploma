@@ -24,7 +24,7 @@ function varargout = Training(varargin)
 
 % Edit the above text to modify the response to help Training
 
-% Last Modified by GUIDE v2.5 05-May-2016 22:45:20
+% Last Modified by GUIDE v2.5 22-May-2016 13:32:02
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -54,12 +54,13 @@ function Training_OpeningFcn(hObject, eventdata, handles, varargin)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to Training (see VARARGIN)
-
+set(handles.PortraitRadio, 'Value', 1);
 % Choose default command line output for Training
 handles.output = hObject;
 
 % Update handles structure
 guidata(hObject, handles);
+
 
 % UIWAIT makes Training wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
@@ -99,18 +100,9 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in ForwardButton.
-function ForwardButton_Callback(hObject, eventdata, handles)
-% hObject    handle to ForwardButton (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-%Получение набора из трех двумерных массивов, взятых из jpg-файла. Каждый массив отвечает за
-%интенсивность красного, зеленого и синего цвета каждого пикселя соответственно
-%После идет перевод изображения N*N к размеру 100*100 по методу ближайшего соседа
+% функция добавления изображения в нужную базу
+function addimage(images, notpreparedimages, answers, imagepath, descriptionpath, handles)
 global palitra;
-global images;
-global notpreparedimages;
-<<<<<<< HEAD
 global strategy;
 switch strategy
 	case 1
@@ -123,8 +115,6 @@ switch strategy
 		V = zeros(1, 10000);
 		BufBinary = zeros(1, 10000);
 end
-
-
 switch strategy
 	case 1
 		MToDisplay=imresize(imread(get(handles.PathEdit, 'String')), [100 100]);
@@ -133,7 +123,6 @@ switch strategy
 	case 3
 		MToDisplay=im2bw(imresize(imread(get(handles.PathEdit, 'String')), [100 100]), 0.5);
 end
-
 %Перевод массива в вектор-строку
 switch strategy
 	case 1
@@ -146,7 +135,6 @@ switch strategy
 		V(:,:)=reshape(MToDisplay, 1, 10000);
 		%V = logical(V);
 end
-
 %Перевод вектора-строки в бинарную вектор-строку
 switch strategy
 	case 1
@@ -166,9 +154,7 @@ switch strategy
 			%BufBinary(1, (m-1)*palitra + fix(V(1, m)/(256/palitra)) + 1)=true;
 		end
 end
-
 images(size(images, 1)+1, :) = BufBinary(1, :);
-
 %Сохранение изображения массива для вывода (если тестовое изображение будет распознано) 
 switch strategy
 	case 1
@@ -191,39 +177,39 @@ switch strategy
 		BufRawImage=zeros(100, 100, 1);
 		BufRawImage(:, :, 1)=MToDisplay;
 end
-
-=======
-V = zeros(1, 10000, 3);
-BufBinary = zeros(1, 10000*palitra*3);
-MToDisplay=imresize(imread(get(handles.PathEdit, 'String')), [100 100]);
-
-%Перевод массива в вектор-строку
-for x = 1 : 3
-	V(:,:,x)=reshape(MToDisplay(:, :, x), 1, 10000);
-end
-
-%Перевод вектора-строки в бинарную вектор-строку
-for j = 1:3
-	for k=1:10000
-		BufBinary(1, palitra*3*(k-1) + fix(V(1, k, j)/(256/palitra)) + palitra*(j-1) + 1) = true;
-	end
-end
-
-images(size(images, 1)+1, :)=BufBinary(1, :);
-BufRawImage=zeros(100, 100, 3);
-%Сохранение изображения массива для вывода (если тестовое изображение будет распознано) 
-for j = 1:3
-	for k=1:100
-		for l=1:100
-			BufRawImage(k,l,j)=fix(MToDisplay(k, l, j)/(256/palitra))*fix(256/palitra);
-		end
-	end
-end
->>>>>>> origin/master
 notpreparedimages(size(notpreparedimages, 1)+1, :, :, :)=BufRawImage;
-
-global answers;
 answers(length(answers)+1)=get(handles.DescriptionEdit, 'String');
+imwrite(MToDisplay, [imagepath, num2str(size(notpreparedimages, 1)), '.jpg']);
+fileID = fopen([descriptionpath, num2str(length(answers)), '.txt'], 'a');
+cell=answers(length(answers));
+fprintf(fileID, '%s' , cell{1});
+fclose(fileID);
+
+
+% --- Executes on button press in ForwardButton.
+function ForwardButton_Callback(hObject, eventdata, handles)
+% hObject    handle to ForwardButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+%Получение набора из трех двумерных массивов, взятых из jpg-файла. Каждый массив отвечает за
+%интенсивность красного, зеленого и синего цвета каждого пикселя соответственно
+%После идет перевод изображения N*N к размеру 100*100 по методу ближайшего соседа
+global palitra;
+global potrtaitimages;
+global pictureimages;
+global notpreparedportraitimages;
+global notpreparedpictureimages;
+global portraitanswers;
+global pictureanswers;
+global strategy;
+
+if get(handles.PortraitRadio, 'Value') == 1
+	addimage(potrtaitimages, notpreparedportraitimages, portraitanswers,  '��������\', '�������� (��������)\', handles);
+else
+	addimage(pictureimages, notpreparedpictureimages, pictureanswers, '�������\', '������� (��������)\', handles);
+end
+
+
 
 TrainingEnd;
 hf=findobj('Name','Training');
@@ -272,7 +258,32 @@ Path = [PathName, FileName];
 set(handles.PathEdit, 'String', Path);
 
 
+% --- Executes on button press in PortraitRadio.
+function PortraitRadio_Callback(hObject, eventdata, handles)
+% hObject    handle to PortraitRadio (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+if get(hObject,'Value')==0
+	set(hObject,'Value', 1);
+else
+	set(handles.PictureRadio, 'Value', 0);
+end
+% Hint: get(hObject,'Value') returns toggle state of PortraitRadio
 
 
+
+
+% --- Executes on button press in PictureRadio.
+function PictureRadio_Callback(hObject, eventdata, handles)
+% hObject    handle to PictureRadio (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+if get(hObject,'Value')==0
+	set(hObject,'Value', 1);
+else
+	set(handles.PortraitRadio, 'Value', 0);
+end
+% Hint: get(hObject,'Value') returns toggle state of PictureRadio
 
 

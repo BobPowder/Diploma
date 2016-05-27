@@ -24,7 +24,7 @@ function varargout = Finding(varargin)
 
 % Edit the above text to modify the response to help Finding
 
-% Last Modified by GUIDE v2.5 09-May-2016 23:35:55
+% Last Modified by GUIDE v2.5 22-May-2016 15:38:55
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -123,12 +123,10 @@ function ForwardButton_Callback(hObject, eventdata, handles)
 % hObject    handle to ForwardButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-<<<<<<< HEAD
 global strategy;
 global palitra;
-global images;
-global notpreparedimages;
-
+global portraitimages;
+global pictureimages;
 switch strategy
 	case 1
 		V = zeros(1, 10000, 3);
@@ -137,18 +135,11 @@ switch strategy
 	case 3
 		V = zeros(1, 10000);
 end
-=======
-global palitra;
-global images;
-global notpreparedimages;
-V = zeros(1, 10000, 3);
->>>>>>> origin/master
 %Работа с тестовым изображением
 
 %Получение набора из трех двумерных массивов, взятых из jpg-файла. Каждый массив отвечает за
 %интенсивность красного, зеленого и синего цвета каждого пикселя соответственно
 %После идет перевод изображения N*N к размеру 100*100 по методу ближайшего соседа
-<<<<<<< HEAD
 switch strategy
 	case 1
 		Buf=imresize(imread(get(handles.PathEdit, 'String')), [100 100]);
@@ -168,20 +159,12 @@ switch strategy
 		V(:,:)=reshape(Buf, 1, 10000);
 	case 3
 		V(:,:)=reshape(Buf, 1, 10000);
-=======
-Buf=imresize(imread(get(handles.PathEdit, 'String')), [100 100]);
-
-%Перевод массива в вектор-строку
-for i = 1 : 3
-    V(:,:,i)=reshape(Buf(:, :, i), 1, 10000);
->>>>>>> origin/master
 end
 	
 %Перевод значений массива из типа int в тип double
 Buf=double(Buf);
 
 %Создание вектора-строки testimage, который будет хранить бинарную комбинацию тестового изображения
-<<<<<<< HEAD
 switch strategy
 	case 1
 		testimage = zeros(1, 10000*palitra*3);
@@ -211,27 +194,20 @@ switch strategy
 end
 
 testimage=double(testimage);
-=======
-testimage = zeros(1, 10000*palitra*3);
-
-%Заполнение вектора-столбца testimage
-for j = 1:3
-    for k=1:10000
-        testimage(1, palitra*3*(k-1) + fix(V(1, k, j)/(256/palitra)) + palitra*(j-1) + 1)=true;
-    end
-end
-testimage=double(testimage);
-
->>>>>>> origin/master
 % Перемножаем эталонные и тестовую БК
 % Результатом будет вектор-столбец, где каждое значение будет хранить
 % количество пикселей тествого изображения, совпадающих с соответствующими 
 % пикселями эталонных изображений
-res = images * testimage';
-<<<<<<< HEAD
-=======
+global imagekind;
+if get(handles.PortraitRadio, 'Value') == 1
+	res = portraitimages * testimage';
+	imagekind='portrait';
+else
+	res = pictureimages * testimage';
+	imagekind='picture';
+end
 
->>>>>>> origin/master
+
 % Ищем максимаьный элемент в полученном векторе,
 % т. е. наиболее схожее эталонное изображение с
 % тестовым
@@ -245,7 +221,6 @@ for i = 1 : length(res)
 end
 
 %Назначаем порог схожести
-<<<<<<< HEAD
 switch strategy
 	case 1
 		threshold=20000;
@@ -254,17 +229,10 @@ switch strategy
 	case 3
 		threshold=1000;
 end
-=======
-threshold=20000;
->>>>>>> origin/master
 
 global ImageToShow;
 
 if max > threshold
-<<<<<<< HEAD
-=======
-	imax
->>>>>>> origin/master
 	ImageToShow=imax;
     %Выводим изображение на экран, если порог превышен
     % result = zeros(100, 100, 3);
@@ -281,3 +249,31 @@ end
 FindingEnd;
 hf=findobj('Name','Finding');
 close(hf);
+
+
+% --- Executes on button press in PortraitRadio.
+function PortraitRadio_Callback(hObject, eventdata, handles)
+% hObject    handle to PortraitRadio (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+if get(hObject,'Value')==0
+	set(hObject,'Value', 1);
+else
+	set(handles.PictureRadio, 'Value', 0);
+end
+% Hint: get(hObject,'Value') returns toggle state of PortraitRadio
+
+
+% --- Executes on button press in PictureRadio.
+function PictureRadio_Callback(hObject, eventdata, handles)
+% hObject    handle to PictureRadio (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+if get(hObject,'Value')==0
+	set(hObject,'Value', 1);
+else
+	set(handles.PortraitRadio, 'Value', 0);
+end
+% Hint: get(hObject,'Value') returns toggle state of PictureRadio
+
+

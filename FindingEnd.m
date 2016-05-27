@@ -57,12 +57,24 @@ function FindingEnd_OpeningFcn(hObject, eventdata, handles, varargin)
 % Choose default command line output for FindingEnd
 handles.output = hObject;
 global ImageToShow;
-global notpreparedimages;
-global answers;
-<<<<<<< HEAD
+global notpreparedportraitimages;
+global notpreparedpictureimages;
+global portraitanswers;
+global pictureanswers;
 global strategy;
+global imagekind;
 %handles
 set(handles.ResultImage, 'visible', 'on');
+
+switch imagekind
+	case 'portrait'
+		notpreparedimages=notpreparedportraitimages;
+		answers=portraitanswers;
+	case 'picture'
+		notpreparedimages=notpreparedpictureimages;
+		answers=pictureanswers;
+end
+
 if ImageToShow > 0
 	switch strategy
 		case 1
@@ -83,28 +95,12 @@ if ImageToShow > 0
 	end
 	imshow(I);
 	%Path = get(handles.Description, 'String');
+	
 	Path = answers{ImageToShow};
 	set(handles.Description, 'String', Path);
 else
 	set(handles.ResultImage, 'visible', 'off');
 	set(handles.Description, 'String', 'Image not found');
-=======
-%handles
-set(handles.ResultImage, 'visible', 'on');
-if ImageToShow > 0
- ImageToShow
- I = zeros(100, 100, 3); 
- I(:, :, :) = notpreparedimages(ImageToShow, :, :, :);
- I=uint8(I);
- axes(handles.ResultImage);
- imshow(I);
- %Path = get(handles.Description, 'String');
- Path = answers{ImageToShow};
- set(handles.Description, 'String', Path);
-else
- set(handles.ResultImage, 'visible', 'off');
- set(handles.Description, 'String', 'Image not found');
->>>>>>> origin/master
 end
 % Update handles structure
 guidata(hObject, handles);
