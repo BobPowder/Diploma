@@ -59,8 +59,10 @@ handles.output = hObject;
 global ImageToShow;
 global notpreparedportraitimages;
 global notpreparedpictureimages;
+global notpreparedECGimages;
 global portraitanswers;
 global pictureanswers;
+global ECGanswers;
 global strategy;
 global imagekind;
 %handles
@@ -73,6 +75,9 @@ switch imagekind
 	case 'picture'
 		notpreparedimages=notpreparedpictureimages;
 		answers=pictureanswers;
+	case 'ECG'
+		notpreparedimages=notpreparedECGimages;
+		answers=ECGanswers;
 end
 
 if ImageToShow > 0
@@ -95,7 +100,7 @@ if ImageToShow > 0
 	end
 	imshow(I);
 	%Path = get(handles.Description, 'String');
-	
+	length(answers)
 	Path = answers{ImageToShow};
 	set(handles.Description, 'String', Path);
 else

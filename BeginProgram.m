@@ -123,6 +123,8 @@ end
 portraitimages=double(portraitimages);
 pictureimages=double(pictureimages);
 
+%pictureimages(1:100)
+
 global portraitanswers;
 portraitanswers=[];
 global pictureanswers;

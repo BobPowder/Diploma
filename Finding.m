@@ -124,6 +124,7 @@ function ForwardButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global strategy;
+global notpreparedtest;
 global palitra;
 global portraitimages;
 global pictureimages;
@@ -142,27 +143,27 @@ end
 %После идет перевод изображения N*N к размеру 100*100 по методу ближайшего соседа
 switch strategy
 	case 1
-		Buf=imresize(imread(get(handles.PathEdit, 'String')), [100 100]);
+		notpreparedtest=imresize(imread(get(handles.PathEdit, 'String')), [100 100]);
 	case 2
-		Buf=imresize(rgb2gray(imread(get(handles.PathEdit, 'String'))), [100 100]);
+		notpreparedtest=imresize(rgb2gray(imread(get(handles.PathEdit, 'String'))), [100 100]);
 	case 3
-		Buf=imresize(im2bw(imread(get(handles.PathEdit, 'String')), 0.5), [100 100]);
+		notpreparedtest=imresize(im2bw(imread(get(handles.PathEdit, 'String')), 0.5), [100 100]);
 end
 
 %Перевод массива в вектор-строку
 switch strategy
 	case 1
 		for i = 1 : 3
-			V(:,:,i)=reshape(Buf(:, :, i), 1, 10000);
+			V(:,:,i)=reshape(notpreparedtest(:, :, i), 1, 10000);
 		end
 	case 2
-		V(:,:)=reshape(Buf, 1, 10000);
+		V(:,:)=reshape(notpreparedtest, 1, 10000);
 	case 3
-		V(:,:)=reshape(Buf, 1, 10000);
+		V(:,:)=reshape(notpreparedtest, 1, 10000);
 end
 	
 %Перевод значений массива из типа int в тип double
-Buf=double(Buf);
+notpreparedtest=double(notpreparedtest);
 
 %Создание вектора-строки testimage, который будет хранить бинарную комбинацию тестового изображения
 switch strategy
@@ -220,6 +221,17 @@ for i = 1 : length(res)
     end;
 end
 
+max
+%Назначаем порог схожести
+switch strategy
+	case 1
+		threshold=5000;
+	case 2
+		threshold=1500;
+	case 3
+		threshold=250;
+end
+
 %Назначаем порог схожести
 switch strategy
 	case 1
@@ -228,6 +240,7 @@ switch strategy
 		threshold=6000;
 	case 3
 		threshold=1000;
+
 end
 
 global ImageToShow;
@@ -246,7 +259,7 @@ else
     %result = 'не удалось распознать';
 end
 
-FindingEnd;
+FindingTest;
 hf=findobj('Name','Finding');
 close(hf);
 

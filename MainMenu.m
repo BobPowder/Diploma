@@ -81,7 +81,15 @@ function trainmethod_Callback(hObject, eventdata, handles)
 % hObject    handle to trainmethod (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-Training;
+global strategy;
+switch strategy
+	case 1
+		Training;
+	case 2
+		Training;
+	case 3
+		TrainingBlack;
+end
 hf=findobj('Name','MainMenu');
 close(hf);
 
@@ -92,8 +100,15 @@ function findmethod_Callback(hObject, eventdata, handles)
 % hObject    handle to findmethod (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-Finding;
+global strategy;
+switch strategy
+	case 1
+		Finding;
+	case 2
+		Finding;
+	case 3
+		FindingBlack;
+end
 hf=findobj('Name','MainMenu');
 close(hf);
 
