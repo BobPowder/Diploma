@@ -1,6 +1,6 @@
 % функция принимает на вход матрицу БК эталонных стихотворений,
 % БК проверямого стихотворения, порог и тексты эталонных стихотворений
-function [] = lastlayer(poemsmatrix, testpoembk, ...
+function [result] = lastlayer(poemsmatrix, testpoembk, ...
     threshold, poemstext)
 % перемножаем БК эталонных и тестового стихотворений
 res = poemsmatrix * testpoembk;
@@ -15,10 +15,12 @@ for i = 1 : length(res)
         disp('Ответ:');
         for j = 1 : 16
             disp(poemstext{i}{j});
+			result=true;
         end
     end
 end
+result=false;
 % рещения нет
-if ~found
-    disp('Стихотворение отсутствует в базе');
-end
+%if ~found
+%    disp('Стихотворение отсутствует в базе');
+%end

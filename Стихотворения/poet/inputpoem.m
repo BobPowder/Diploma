@@ -23,6 +23,9 @@ for i = 1 : 16
     % сохран€ем Ѕ  строки
     linesbk{i} = tobk(line, wordlength);
 end
+
+
+
 % пороги дл€ частей стихотворени€
 thresholds = zeros(1, nbits);
 % считаем пороги дл€ частей стихотворени€
